@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Scan QR - MEDIVET Asset Management</title>
+
+  <!-- QR Scanner Library -->
+  <script src="https://unpkg.com/html5-qrcode"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+      background: #f5f7fb;
+      color: #1f2937;
+
+      min-height: 100vh;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 520px;
+    }
+
+    .card {
+      background: #ffffff;
+
+      border: 1px solid #e5e7eb;
+
+      border-radius: 16px;
+
+      padding: 22px;
+
+      box-shadow:
+        0 10px 30px
+        rgba(0, 0, 0, 0.08);
+    }
+
+    .header {
+      text-align: center;
+
+      margin-bottom: 20px;
+    }
+
+    .brand {
+      font-size: 18px;
+
+      font-weight: 700;
+
+      color: #111827;
+
+      line-height: 1.35;
+    }
+
+    .subtitle {
+      margin-top: 5px;
+
+      font-size: 11px;
+
+      color: #6b7280;
+
+      letter-spacing: 1px;
+
+      font-weight: 700;
+    }
+
+    .title {
+      margin-top: 20px;
+
+      font-size: 21px;
+
+      font-weight: 700;
+
+      color: #111827;
+    }
+
+    .description {
+      margin-top: 6px;
+
+      font-size: 13px;
+
+      line-height: 1.6;
+
+      color: #6b7280;
+    }
+
+    #reader {
+      width: 100%;
+
+      margin-top: 20px;
+
+      overflow: hidden;
+
+      border-radius: 12px;
+    }
+
+    #reader video {
+      width: 100% !important;
+
+      border-radius: 12px;
+    }
+
+    #reader__scan_region {
+      border-radius: 12px;
+
+      overflow: hidden;
+    }
+
+    #reader__dashboard {
+      padding: 12px !important;
+
+      text-align: center;
+    }
+
+    #reader__dashboard button {
+      border: none !important;
+
+      border-radius: 8px !important;
+
+      padding: 10px 14px !important;
+
+      background: #4f46e5 !important;
+
+      color: white !important;
+
+      cursor: pointer;
+
+      margin: 3px;
+
+      font-weight: 600;
+    }
+
+    #reader__dashboard button:hover {
+      background: #4338ca !important;
+    }
+
+    #reader__dashboard select {
+      padding: 9px !important;
+
+      border-radius: 8px !important;
+
+        1px solid #d1d5db !important;
+
+      background: white;
+    }
+
+    .status {
+      margin-top: 15px;
+
+      padding: 12px;
+
+      border-radius: 9px;
+
+      background: #f3f4f6;
+
+      color: #4b5563;
+
+      text-align: center;
+
+      font-size: 13px;
+
+      line-height: 1.5;
+    }
+
+    .success {
+      background: #ecfdf5;
+
+      border:
+        1px solid #bbf7d0;
+
+      color: #166534;
+    }
+
+    .error {
+      background: #fef2f2;
+
+      border:
+        1px solid #fecaca;
+
+      color: #991b1b;
+    }
+
+    .warning {
+      background: #fffbeb;
+
+      border:
+        1px solid #fde68a;
+
+      color: #92400e;
+    }
+
+    .result {
+      margin-top: 15px;
+
+      padding: 15px;
+
+      border-radius: 10px;
+
+      background: #eff6ff;
+
+      border:
+        1px solid #bfdbfe;
+
+      color: #1e40af;
+
+      display: none;
+
+      font-size: 13px;
+
+      line-height: 1.6;
+
+      word-break: break-word;
+    }
+
+    .result-code {
+      margin-top: 5px;
+
+      font-size: 17px;
+
+      font-weight: 700;
+    }
+
+    .back-button {
+      width: 100%;
+
+      margin-top: 15px;
+
+      border: none;
+
+      border-radius: 8px;
+
+      padding: 11px 15px;
+
+      background: #f3f4f6;
+
+      color: #374151;
+
+      font-size: 13px;
+
+      font-weight: 600;
+
+      cursor: pointer;
+    }
+
+    .back-button:hover {
+      background: #e5e7eb;
+    }
+
+    .loading {
+      display: none;
+
+      text-align: center;
+
+      margin-top: 15px;
+
+      font-size: 13px;
+
+      color: #6b7280;
+    }
+
+    .spinner {
+      width: 28px;
+
+      height: 28px;
+
+      border:
+        3px solid #e5e7eb;
+
+      border-top-color: #4f46e5;
+
+      border-radius: 50%;
+
+      animation:
+        spin 0.8s linear infinite;
+
+      margin:
+        0 auto 10px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @media (max-width: 500px) {
+
+      body {
+        padding: 12px;
+      }
+
+      .card {
+        padding: 16px;
+      }
+
+      .brand {
+        font-size: 16px;
+      }
+
+      .title {
+        font-size: 19px;
+      }
+
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="card">
+
+      <!-- HEADER -->
+      <div class="header">
+
+        <div class="brand">
+          MEDIVET PDHB drh Cucu Sunter
+        </div>
+
+        <div class="subtitle">
+          ASSET MANAGEMENT
+        </div>
+
+        <div class="title">
+          Scan QR Asset
+        </div>
+
+        <div class="description">
+          Arahkan kamera ke QR Code asset
+          untuk membuka detail asset.
+        </div>
+
+      </div>
+
+
+      <!-- CAMERA CONTROL -->
+      <button id="startCameraBtn" class="back-button" type="button" onclick="startScanner()">Aktifkan Kamera</button>
+
+      <!-- SCANNER -->
+      <div id="reader"></div>
+
+
+      <!-- STATUS -->
+      <div
+        id="status"
+        class="status"
+      >
+        Meminta akses kamera...
+      </div>
+
+
+      <!-- RESULT -->
+      <div
+        id="result"
+        class="result"
+      >
+
+        <div>
+          QR Code berhasil dibaca.
+        </div>
+
+        <div
+          id="resultCode"
+          class="result-code"
+        >
+          -
+        </div>
+
+      </div>
+
+
+      <!-- LOADING -->
+      <div
+        id="loading"
+        class="loading"
+      >
+
+        <div class="spinner"></div>
+
+        Membuka detail asset...
+
+      </div>
+
+
+      <!-- BACK -->
+      <button
+        class="back-button"
+        onclick="goBack()"
+      >
+        ← Kembali ke Asset Management
+      </button>
+
+    </div>
+
+  </div>
+
+
+<script>
+
+  /* =====================================================
+     CONFIGURATION
+  ===================================================== */
+
+  const params =
+    new URLSearchParams(
+      window.location.search
+    );
+
+
+  /*
+    URL Asset Management dikirim
+    dari Index.html menggunakan:
+
+    ?return=URL_WEB_APP
+  */
+
+  const returnUrl =
+    params.get('return') || '';
+
+
+  /*
+    Jika QR berisi URL:
+
+    https://script.google.com/...?...kode=STR-0126-100001
+
+    kita akan mengambil parameter
+    kode / kodeAsset / id.
+
+    Jika QR hanya berisi:
+
+    STR-0126-100001
+
+    maka langsung dianggap sebagai
+    Kode Asset.
+  */
+
+
+  let scanner = null;
+
+  let scannerStarted = false;
+
+  let scanProcessed = false;
+
+
+  /* =====================================================
+     ELEMENT
+  ===================================================== */
+
+  const statusBox =
+    document.getElementById('status');
+
+  const resultBox =
+    document.getElementById('result');
+
+  const resultCode =
+    document.getElementById('resultCode');
+
+  const loadingBox =
+    document.getElementById('loading');
+
+
+  /* =====================================================
+     START
+  ===================================================== */
+
+  window.addEventListener(
+    'load',
+    function() {
+
+      startScanner();
+
+    }
+  );
+
+
+  /* =====================================================
+     START SCANNER
+  ===================================================== */
+
+  function startScanner() {
+
+    if (scannerStarted) {
+      return;
+    }
+
+    scannerStarted = true;
+
+    setStatus(
+      'Meminta akses kamera...',
+      'warning'
+    );
+
+
+    scanner =
+      new Html5Qrcode(
+        'reader'
+      );
+
+
+    const config = {
+
+      fps: 10,
+
+      qrbox: function(
+        viewfinderWidth,
+        viewfinderHeight
+      ) {
+
+        const minSize =
+          Math.min(
+            viewfinderWidth,
+            viewfinderHeight
+          );
+
+        const size =
+          Math.floor(
+            minSize * 0.70
+          );
+
+        return {
+          width: size,
+          height: size
+        };
+
+      },
+
+      aspectRatio: 1.0,
+
+      rememberLastUsedCamera: true
+
+    };
+
+
+    const startWithCamera = function(cameraConfig) {
+      return scanner.start(cameraConfig, config, onScanSuccess, onScanFailure);
+    };
+
+    startWithCamera({ facingMode: { exact: 'environment' } })
+      .catch(function(firstError) {
+        console.warn('Environment camera failed, trying available cameras:', firstError);
+        return Html5Qrcode.getCameras().then(function(cameras) {
+          if (!cameras || !cameras.length) throw firstError;
+          return startWithCamera(cameras[0].id);
+        });
+      })
+      .then(function() {
+        setStatus('Kamera aktif. Arahkan kamera ke QR Code asset.', 'success');
+        const btn = document.getElementById('startCameraBtn');
+        if (btn) btn.style.display = 'none';
+      })
+      .catch(function(error) {
+        console.error('Camera error:', error);
+        scannerStarted = false;
+        handleCameraError(error);
+        const btn = document.getElementById('startCameraBtn');
+        if (btn) btn.style.display = 'inline-block';
+      });
+
+      });
+
+  }
+
+
+  /* =====================================================
+     SCAN SUCCESS
+  ===================================================== */
+
+  function onScanSuccess(
+    decodedText,
+    decodedResult
+  ) {
+
+    /*
+      Jangan proses QR berkali-kali.
+    */
+
+    if (scanProcessed) {
+      return;
+    }
+
+
+    scanProcessed = true;
+
+
+    console.log(
+      'QR terbaca:',
+      decodedText
+    );
+
+
+    setStatus(
+      'QR Code berhasil dibaca.',
+      'success'
+    );
+
+
+    resultBox.style.display =
+      'block';
+
+
+    const kodeAsset =
+      extractAssetCode(
+        decodedText
+      );
+
+
+    if (!kodeAsset) {
+
+      scanProcessed = false;
+
+      setStatus(
+        'QR terbaca, tetapi Kode Asset tidak ditemukan.',
+        'error'
+      );
+
+      resultCode.textContent =
+        decodedText;
+
+      return;
+
+    }
+
+
+    resultCode.textContent =
+      kodeAsset;
+
+
+    /*
+      Stop kamera terlebih dahulu.
+    */
+
+    stopScanner();
+
+
+    /*
+      Buka halaman detail asset.
+    */
+
+    openAsset(
+      kodeAsset
+    );
+
+  }
+
+
+  /* =====================================================
+     SCAN FAILURE
+  ===================================================== */
+
+  function onScanFailure(
+    errorMessage
+  ) {
+
+    /*
+      Tidak perlu menampilkan
+      error setiap frame.
+
+      html5-qrcode akan memanggil
+      fungsi ini berkali-kali ketika
+      QR belum ditemukan.
+    */
+
+  }
+
+
+  /* =====================================================
+     EXTRACT ASSET CODE
+  ===================================================== */
+
+  function extractAssetCode(
+    text
+  ) {
+
+    if (!text) {
+      return '';
+    }
+
+
+    text =
+      String(text).trim();
+
+
+    /*
+      CASE 1
+      QR berisi URL.
+    */
+
+    try {
+
+      const url =
+        new URL(text);
+
+
+      /*
+        Coba beberapa nama parameter.
+      */
+
+      const possibleParams = [
+        'kode',
+        'kodeAsset',
+        'id',
+        'asset',
+        'assetId'
+      ];
+
+
+      for (
+        let i = 0;
+        i < possibleParams.length;
+        i++
+      ) {
+
+        const value =
+          url.searchParams.get(
+            possibleParams[i]
+          );
+
+
+        if (
+          value &&
+          value.trim()
+        ) {
+
+          return value.trim();
+
+        }
+
+      }
+
+
+      /*
+        Jika URL tidak memiliki
+        parameter kode tetapi path
+        berisi kode asset, coba ambil
+        bagian terakhir.
+      */
+
+      const path =
+        url.pathname
+          .split('/')
+          .filter(Boolean);
+
+
+      if (path.length > 0) {
+
+        const last =
+          path[path.length - 1];
+
+
+        if (
+          looksLikeAssetCode(last)
+        ) {
+
+          return last;
+
+        }
+
+      }
+
+    } catch (error) {
+
+      /*
+        Bukan URL.
+        Lanjut sebagai Kode Asset.
+      */
+
+    }
+
+
+    /*
+      CASE 2
+      QR langsung berisi Kode Asset.
+
+      Contoh:
+      STR-0126-100001
+    */
+
+    if (
+      looksLikeAssetCode(text)
+    ) {
+
+      return text;
+
+    }
+
+
+    /*
+      CASE 3
+      Jika format tidak standar,
+      tetap gunakan text sebagai
+      Kode Asset selama tidak kosong.
+    */
+
+    return text;
+
+  }
+
+
+  /* =====================================================
+     CHECK ASSET CODE
+  ===================================================== */
+
+  function looksLikeAssetCode(
+    value
+  ) {
+
+    if (!value) {
+      return false;
+    }
+
+
+    value =
+      String(value).trim();
+
+
+    /*
+      Format contoh:
+
+      STR-0126-100001
+
+      Tetapi dibuat fleksibel
+      supaya Kode Asset manual
+      tetap dapat digunakan.
+    */
+
+    return (
+      value.length >= 3 &&
+      value.length <= 100 &&
+      !value.includes(' ') &&
+      !value.includes('/')
+    );
+
+  }
+
+
+  /* =====================================================
+     OPEN ASSET
+  ===================================================== */
+
+  function openAsset(
+    kodeAsset
+  ) {
+
+    loadingBox.style.display =
+      'block';
+
+
+    /*
+      Jika return URL tersedia,
+      gunakan URL tersebut.
+
+      Contoh:
+
+      return =
+      https://script.google.com/macros/s/XXXX/exec
+
+      hasil:
+
+      https://script.google.com/macros/s/XXXX/exec?kode=STR-0126-100001
+    */
+
+    if (returnUrl) {
+
+      const separator =
+        returnUrl.includes('?')
+          ? '&'
+          : '?';
+
+
+      const targetUrl =
+        returnUrl +
+        separator +
+        'kode=' +
+        encodeURIComponent(
+          kodeAsset
+        );
+
+
+      console.log(
+        'Opening asset:',
+        targetUrl
+      );
+
+
+      setTimeout(
+        function() {
+
+          window.location.href =
+            targetUrl;
+
+        },
+        400
+      );
+
+
+      return;
+
+    }
+
+
+    /*
+      Jika tidak ada return URL,
+      tampilkan error.
+    */
+
+    loadingBox.style.display =
+      'none';
+
+
+    setStatus(
+      'URL Asset Management tidak ditemukan. Silakan buka scanner dari menu Scan QR pada aplikasi.',
+      'error'
+    );
+
+
+    scanProcessed = false;
+
+  }
+
+
+  /* =====================================================
+     STOP SCANNER
+  ===================================================== */
+
+  function stopScanner() {
+
+    if (
+      !scanner ||
+      !scannerStarted
+    ) {
+
+      return;
+
+    }
+
+
+    scanner
+      .stop()
+
+      .then(function() {
+
+        scannerStarted = false;
+
+        console.log(
+          'Scanner stopped.'
+        );
+
+      })
+
+      .catch(function(error) {
+
+        console.error(
+          'Stop scanner error:',
+          error
+        );
+
+        scannerStarted = false;
+
+      });
+
+  }
+
+
+  /* =====================================================
+     CAMERA ERROR
+  ===================================================== */
+
+  function handleCameraError(
+    error
+  ) {
+
+    let message =
+      'Kamera tidak dapat digunakan.';
+
+
+    const errorText =
+      String(
+        error || ''
+      ).toLowerCase();
+
+
+    if (
+      errorText.includes(
+        'permission'
+      ) ||
+      errorText.includes(
+        'notallowed'
+      )
+    ) {
+
+      message =
+        'Akses kamera ditolak. Izinkan kamera pada browser, kemudian muat ulang halaman.';
+
+    }
+
+    else if (
+      errorText.includes(
+        'notfound'
+      ) ||
+      errorText.includes(
+        'no camera'
+      )
+    ) {
+
+      message =
+        'Kamera tidak ditemukan pada perangkat ini.';
+
+    }
+
+    else if (
+      errorText.includes(
+        'secure'
+      )
+    ) {
+
+      message =
+        'Kamera membutuhkan koneksi HTTPS. Pastikan scanner dibuka melalui GitHub Pages.';
+
+    }
+
+
+    setStatus(
+      message,
+      'error'
+    );
+
+  }
+
+
+  /* =====================================================
+     STATUS
+  ===================================================== */
+
+  function setStatus(
+    message,
+    type
+  ) {
+
+    statusBox.textContent =
+      message;
+
+
+    statusBox.className =
+      'status';
+
+
+    if (type) {
+
+      statusBox.classList.add(
+        type
+      );
+
+    }
+
+  }
+
+
+  /* =====================================================
+     BACK
+  ===================================================== */
+
+  function goBack() {
+
+    stopScanner();
+
+
+    if (returnUrl) {
+
+      window.location.href =
+        returnUrl;
+
+      return;
+
+    }
+
+
+    if (
+      window.history.length > 1
+    ) {
+
+      window.history.back();
+
+      return;
+
+    }
+
+
+    window.location.href =
+      'https://mrdwann20gg.github.io/asset-scanner/';
+
+  }
+
+
+  /* =====================================================
+     PAGE EXIT
+  ===================================================== */
+
+  window.addEventListener(
+    'beforeunload',
+    function() {
+
+      stopScanner();
+
+    }
+  );
+
+</script>
+
+</body>
+</html>
