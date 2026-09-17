@@ -1,440 +1,65 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <title>MEDIVET - Scan QR Asset</title>
-
-  <script
-    src="https://unpkg.com/html5-qrcode"
-    type="text/javascript"
-  ></script>
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: Arial, Helvetica, sans-serif;
-      background: #f5f7fb;
-      color: #111827;
-    }
-
-    .page {
-      width: 100%;
-      max-width: 620px;
-      margin: 0 auto;
-      padding: 25px 16px 40px;
-    }
-
-    .card {
-      background: #ffffff;
-      border: 1px solid #e5e7eb;
-      border-radius: 16px;
-      padding: 20px;
-      box-shadow: 0 8px 30px rgba(0,0,0,.06);
-    }
-
-    .brand {
-      text-align: center;
-      margin-bottom: 18px;
-    }
-
-    .brand-title {
-      font-size: 20px;
-      font-weight: 700;
-      line-height: 1.35;
-    }
-
-    .brand-subtitle {
-      margin-top: 5px;
-      font-size: 11px;
-      letter-spacing: 1.2px;
-      font-weight: 700;
-      color: #6b7280;
-    }
-
-    .title {
-      text-align: center;
-      font-size: 18px;
-      font-weight: 700;
-      margin: 18px 0 8px;
-    }
-
-    .info {
-      text-align: center;
-      color: #6b7280;
-      font-size: 13px;
-      line-height: 1.6;
-      margin-bottom: 16px;
-    }
-
-    #reader {
-      width: 100%;
-      max-width: 520px;
-      margin: 0 auto;
-      overflow: hidden;
-      border-radius: 12px;
-    }
-
-    #reader video {
-      width: 100% !important;
-      border-radius: 12px;
-    }
-
-    #reader__dashboard {
-      padding: 10px !important;
-    }
-
-    #reader__dashboard button {
-      border: 0 !important;
-      border-radius: 8px !important;
-      padding: 9px 13px !important;
-      background: #4f46e5 !important;
-      color: #ffffff !important;
-      cursor: pointer;
-      margin: 3px;
-    }
-
-    #reader__dashboard select {
-      padding: 8px !important;
-      border-radius: 7px !important;
-      border: 1px solid #d1d5db !important;
-    }
-
-    .status {
-      margin-top: 15px;
-      padding: 12px 14px;
-      border-radius: 9px;
-      background: #f3f4f6;
-      color: #374151;
-      font-size: 13px;
-      text-align: center;
-    }
-
-    .error {
-      background: #fef2f2;
-      color: #991b1b;
-      border: 1px solid #fecaca;
-    }
-
-    .success {
-      background: #ecfdf5;
-      color: #166534;
-      border: 1px solid #bbf7d0;
-    }
-
-    .back {
-      display: block;
-      width: 100%;
-      margin-top: 12px;
-      padding: 11px 14px;
-      border: 0;
-      border-radius: 9px;
-      background: #f3f4f6;
-      color: #374151;
-      cursor: pointer;
-      font-weight: 600;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scan QR - MEDIVET Asset Management</title>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;padding:20px;background:#f5f7fb;font-family:Arial,sans-serif;color:#1f2937;min-height:100vh;display:flex;justify-content:center;align-items:center}.card{width:100%;max-width:520px;background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:22px;box-shadow:0 10px 30px #00000014}.header{text-align:center}.brand{font-size:18px;font-weight:700}.subtitle{font-size:11px;letter-spacing:1px;font-weight:700;color:#6b7280;margin-top:5px}.title{font-size:21px;font-weight:700;margin-top:22px}.description{font-size:13px;line-height:1.6;color:#6b7280;margin-top:7px}button{border:0;border-radius:9px;padding:12px 16px;background:#4f46e5;color:#fff;font-weight:700;cursor:pointer;margin-top:18px;width:100%}button:disabled{opacity:.6}#reader{width:100%;margin-top:18px;overflow:hidden;border-radius:12px}.status{margin-top:15px;padding:12px;border-radius:9px;background:#f3f4f6;text-align:center;font-size:13px;line-height:1.5}.success{background:#ecfdf5;color:#166534}.error{background:#fef2f2;color:#991b1b}.warning{background:#fffbeb;color:#92400e}.back{background:#6b7280}.result{display:none;margin-top:15px;padding:12px;border-radius:9px;background:#eff6ff;color:#1e40af;word-break:break-word}
+</style>
 </head>
-
 <body>
-
-  <div class="page">
-
-    <div class="card">
-
-      <div class="brand">
-        <div class="brand-title">
-          MEDIVET PDHB drh Cucu Sunter
-        </div>
-
-        <div class="brand-subtitle">
-          ASSET MANAGEMENT
-        </div>
-      </div>
-
-      <div class="title">
-        Scan QR Asset
-      </div>
-
-      <div class="info">
-        Izinkan akses kamera jika browser meminta izin,
-        kemudian arahkan kamera ke QR Code asset.
-      </div>
-
-      <div id="reader"></div>
-
-      <div id="status" class="status">
-        Menyiapkan kamera...
-      </div>
-
-      <button
-        type="button"
-        class="back"
-        onclick="window.close()"
-      >
-        Tutup Scanner
-      </button>
-
-    </div>
-
-  </div>
-
+<div class="card">
+<div class="header"><div class="brand">MEDIVET PDHB drh Cucu Sunter</div><div class="subtitle">ASSET MANAGEMENT</div><div class="title">Scan QR Asset</div><div class="description">Arahkan kamera ke QR Code asset untuk membuka detail asset.</div></div>
+<button id="startBtn" type="button">Aktifkan Kamera</button>
+<div id="reader"></div>
+<div id="status" class="status">Tekan tombol Aktifkan Kamera untuk memulai.</div>
+<div id="result" class="result"></div>
+<button class="back" id="backBtn" type="button">← Kembali ke Asset Management</button>
+</div>
 <script>
-  let scanner = null;
-  let processing = false;
-
-  const params =
-    new URLSearchParams(
-      window.location.search
-    );
-
-  const returnUrl =
-    params.get('return') || '';
-
-  function setStatus(
-    message,
-    type
-  ) {
-
-    const box =
-      document.getElementById('status');
-
-    if (!box) return;
-
-    box.textContent =
-      message;
-
-    box.className =
-      'status' +
-      (type ? ' ' + type : '');
-  }
-
-
-  function extractKode(decodedText) {
-
-    if (!decodedText) {
-      return '';
-    }
-
-    const text =
-      String(decodedText).trim();
-
-    // QR berisi URL aplikasi.
-    try {
-
-      const url =
-        new URL(text);
-
-      const kode =
-        url.searchParams.get('kode') ||
-        url.searchParams.get('id');
-
-      if (kode) {
-        return decodeURIComponent(
-          kode
-        ).trim();
-      }
-
-    } catch (e) {
-      // Bukan URL.
-    }
-
-    // QR langsung berisi kode asset.
-    if (
-      /^[A-Za-z0-9]+-[A-Za-z0-9]+-[A-Za-z0-9]+$/
-        .test(text)
-    ) {
-      return text;
-    }
-
-    // Cari kode di dalam teks tambahan.
-    const match =
-      text.match(
-        /[A-Za-z0-9]+-[A-Za-z0-9]+-[A-Za-z0-9]+/
-      );
-
-    return match
-      ? match[0]
-      : '';
-  }
-
-
-  function openAssetDetail(
-    decodedText
-  ) {
-
-    if (processing) {
-      return;
-    }
-
-    processing = true;
-
-    const kode =
-      extractKode(decodedText);
-
-    if (!kode) {
-
-      processing = false;
-
-      setStatus(
-        'QR terbaca, tetapi Kode Asset tidak ditemukan.',
-        'error'
-      );
-
-      return;
-    }
-
-    setStatus(
-      'QR berhasil dibaca: ' +
-      kode +
-      '. Membuka detail asset...',
-      'success'
-    );
-
-    if (!returnUrl) {
-
-      setStatus(
-        'URL kembali ke Asset Management tidak ditemukan.',
-        'error'
-      );
-
-      return;
-    }
-
-    const detailUrl =
-      returnUrl +
-      '?kode=' +
-      encodeURIComponent(kode);
-
-    if (scanner) {
-
-      scanner
-        .stop()
-        .catch(function() {})
-        .finally(function() {
-
-          window.location.href =
-            detailUrl;
-
-        });
-
-    } else {
-
-      window.location.href =
-        detailUrl;
-    }
-  }
-
-
-  function startScanner() {
-
-    if (
-      typeof Html5Qrcode ===
-      'undefined'
-    ) {
-
-      setStatus(
-        'Library scanner belum berhasil dimuat. Periksa koneksi internet.',
-        'error'
-      );
-
-      return;
-    }
-
-    scanner =
-      new Html5Qrcode('reader');
-
-    const config = {
-      fps: 10,
-
-      qrbox: function(
-        width,
-        height
-      ) {
-
-        const size =
-          Math.floor(
-            Math.min(
-              width,
-              height
-            ) * 0.70
-          );
-
-        return {
-          width: size,
-          height: size
-        };
-      },
-
-      aspectRatio: 1.0,
-
-      formatsToSupport: [
-        Html5QrcodeSupportedFormats.QR_CODE
-      ]
-    };
-
-    scanner
-      .start(
-        {
-          facingMode: {
-            ideal: 'environment'
-          }
-        },
-        config,
-        function(decodedText) {
-
-          openAssetDetail(
-            decodedText
-          );
-
-        },
-        function() {
-          // Tidak menampilkan error setiap frame.
-        }
-      )
-      .then(function() {
-
-        setStatus(
-          'Kamera aktif. Arahkan kamera ke QR Code asset.'
-        );
-
-      })
-      .catch(function(error) {
-
-        console.error(
-          'Camera error:',
-          error
-        );
-
-        setStatus(
-          'Kamera tidak dapat dibuka. ' +
-          'Pastikan izin kamera browser diizinkan.',
-          'error'
-        );
-      });
-  }
-
-
-  window.addEventListener(
-    'load',
-    function() {
-
-      // Scanner dimulai otomatis setelah halaman eksternal dibuka.
-      startScanner();
-
-    }
-  );
+(function(){
+'use strict';
+const params=new URLSearchParams(location.search);
+const returnUrl=params.get('return')||'';
+const statusBox=document.getElementById('status');
+const startBtn=document.getElementById('startBtn');
+const resultBox=document.getElementById('result');
+let scanner=null, running=false, processed=false;
+function status(msg,type){statusBox.textContent=msg;statusBox.className='status'+(type?' '+type:'')}
+function extractCode(text){
+  try{const u=new URL(text);return u.searchParams.get('kode')||u.searchParams.get('kodeAsset')||u.searchParams.get('id')||text}catch(e){return text}
+}
+function onSuccess(text){
+ if(processed)return;processed=true;
+ const code=extractCode(String(text||'').trim());
+ resultBox.style.display='block';resultBox.textContent='QR terbaca: '+code;
+ status('QR berhasil dibaca. Membuka detail asset...','success');
+ stop();
+ if(/^https?:\/\//i.test(String(text).trim())){location.href=String(text).trim();return;}
+ if(returnUrl){const sep=returnUrl.includes('?')?'&':'?';location.href=returnUrl+sep+'kode='+encodeURIComponent(code);}
+ else{resultBox.textContent='Kode asset: '+code;}
+}
+function start(){
+ if(running)return;
+ if(typeof Html5Qrcode==='undefined'){status('Library scanner gagal dimuat. Periksa koneksi internet lalu muat ulang.','error');return;}
+ running=true;processed=false;startBtn.disabled=true;status('Meminta akses kamera...','warning');
+ if(!window.isSecureContext)throw new Error('Halaman kamera harus dibuka melalui HTTPS.');
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw new Error('Akses kamera tidak tersedia. Pastikan menggunakan Chrome/Edge melalui HTTPS dan izin kamera tidak diblokir.');
+  scanner=new Html5Qrcode('reader');
+  const config={fps:10,qrbox:{width:250,height:250},aspectRatio:1.0};
+  scanner.start({facingMode:{exact:'environment'}},config,onSuccess,()=>{})
+  .catch(()=>scanner.start({facingMode:'user'},config,onSuccess,()=>{}))
+  .then(()=>{status('Kamera aktif. Arahkan kamera ke QR Code asset.','success');startBtn.style.display='none';})
+ .catch(err=>{console.error(err);running=false;startBtn.disabled=false;status('Kamera tidak dapat digunakan: '+(err&&err.message?err.message:String(err)),'error');});
+}
+function stop(){if(scanner&&running){scanner.stop().catch(()=>{}).finally(()=>{running=false;});}}
+startBtn.addEventListener('click',start);
+document.getElementById('backBtn').addEventListener('click',()=>{stop();if(returnUrl)location.href=returnUrl;else history.back();});
+window.addEventListener('pagehide',stop);
+})();
 </script>
-
 </body>
 </html>
