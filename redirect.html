@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mengalihkan...</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      background: #f3f6fb;
+      color: #1f2937;
+      padding: 20px;
+    }
+    .box {
+      text-align: center;
+      padding: 30px;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(0,0,0,.08);
+      max-width: 400px;
+      width: 100%;
+    }
+    h1 { color: #1d4ed8; font-size: 18px; margin: 16px 0 8px; }
+    p { color: #64748b; font-size: 13px; margin: 0 0 16px; }
+    .spinner {
+      width: 34px;
+      height: 34px;
+      border: 3px solid #e5e7eb;
+      border-top-color: #4f46e5;
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+      margin: 0 auto;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    a {
+      color: #4f46e5;
+      font-size: 12px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <div class="spinner"></div>
+    <h1>Mengalihkan...</h1>
+    <p id="info">Membuka detail asset...</p>
+    <a id="manualLink" href="#" style="display:none;">Klik di sini kalau tidak otomatis</a>
+  </div>
+
+  <script>
+    // ============================================
+    // KONFIGURASI — GANTI DENGAN URL WEB APP LO
+    // ============================================
+    var WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxxxxxxxxxxxxxxxxxxxx/exec';
+    // ============================================
+
+    var params = new URLSearchParams(window.location.search);
+    var kode = params.get('id') || params.get('kode') || '';
+
+    if (!kode) {
+      document.getElementById('info').textContent = 'Kode asset tidak ditemukan di URL.';
+      document.querySelector('.spinner').style.display = 'none';
+    } else {
+      var target = WEB_APP_URL + '?kode=' + encodeURIComponent(kode);
+      document.getElementById('info').textContent = 'Membuka asset: ' + kode;
+
+      // Auto redirect setelah 300ms
+      setTimeout(function() {
+        window.location.replace(target);
+      }, 300);
+
+      // Fallback link manual
+      var ml = document.getElementById('manualLink');
+      ml.href = target;
+      ml.style.display = 'inline-block';
+    }
+  </script>
+</body>
+</html>
