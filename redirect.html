@@ -57,9 +57,9 @@
 
   <script>
     // ============================================
-    // KONFIGURASI — GANTI DENGAN URL WEB APP LO
+    // GANTI BARIS INI DENGAN URL WEB APP /exec LO
     // ============================================
-    var WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxxxxxxxxxxxxxxxxxxxx/exec';
+    var WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzRf_9LjyTM_9e9Gf84f6onqgQ-okaYlhRMkYKOquqYAE53cwt2IJhYwlTCRMtmOQ47Wg/exec';
     // ============================================
 
     var params = new URLSearchParams(window.location.search);
@@ -72,12 +72,10 @@
       var target = WEB_APP_URL + '?kode=' + encodeURIComponent(kode);
       document.getElementById('info').textContent = 'Membuka asset: ' + kode;
 
-      // Auto redirect setelah 300ms
       setTimeout(function() {
         window.location.replace(target);
       }, 300);
 
-      // Fallback link manual
       var ml = document.getElementById('manualLink');
       ml.href = target;
       ml.style.display = 'inline-block';
